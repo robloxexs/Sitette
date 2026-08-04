@@ -2,41 +2,74 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>WatchTogether Orange — Совместный просмотр видео</title>
-  
-  <!-- Оптимизированное подключение современных шрифтов -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#ff8a00" />
+  <meta name="description" content="WatchTogether Orange — совместный просмотр видео и чат." />
+
+  <title>WatchTogether Orange</title>
 
   <style>
-    /* CSS переменные для удобного управления темой */
     :root {
-      --bg-dark: #121214;
-      --bg-panel: #1e1f22;
-      --bg-card: #2b2d31;
+      --bg: #0f1115;
+      --bg-card: #181b22;
+      --bg-card-2: #20242d;
+
+      --text: #f1f3f7;
+      --muted: #a6adba;
+      --muted-2: #7d8594;
+
       --accent: #ff8a00;
-      --accent-hover: #ffa12f;
-      --text-main: #f2f3f5;
-      --text-muted: #949ba4;
-      --font-family: 'Inter', 'Segoe UI', sans-serif;
-      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --accent-light: #ffb347;
+      --accent-dark: #d96e00;
+
+      --border: rgba(255,255,255,.08);
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+
+      --radius: 22px;
+      --radius-small: 14px;
+
+      --container: 1180px;
     }
 
-    /* Сброс базовых стилей */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: var(--font-family);
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
+      font-family:
+        Inter,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+      color: var(--text);
+
+      background:
+        radial-gradient(
+          circle at 10% 0%,
+          rgba(255,138,0,.16),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 90% 5%,
+          rgba(255,179,71,.10),
+          transparent 25%
+        ),
+        linear-gradient(
+          180deg,
+          #0b0d11,
+          var(--bg)
+        );
+
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.55;
     }
 
     a {
@@ -44,223 +77,1418 @@
       color: inherit;
     }
 
-    /* Утилиты и контейнеры */
+    button {
+      font-family: inherit;
+    }
+
     .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
+      width: min(
+        var(--container),
+        calc(100% - 32px)
+      );
+
+      margin: auto;
     }
 
-    .text-accent {
-      color: var(--accent);
+    /* =========================
+       NAVBAR
+    ========================= */
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+
+      backdrop-filter: blur(18px);
+
+      background:
+        rgba(15,17,21,.72);
+
+      border-bottom:
+        1px solid var(--border);
     }
 
-    /* Главный экран (Hero) */
+    .topbar-inner {
+      min-height: 72px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+
+      gap: 12px;
+
+      font-weight: 800;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 15px;
+
+      background:
+        linear-gradient(
+          145deg,
+          var(--accent),
+          var(--accent-light)
+        );
+
+      color: #191006;
+
+      box-shadow:
+        0 10px 30px
+        rgba(255,138,0,.28);
+
+      font-size: 19px;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-text strong {
+      font-size: 15px;
+    }
+
+    .brand-text span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+
+      color: var(--muted);
+
+      font-size: 14px;
+    }
+
+    .nav a {
+      transition:
+        color .2s ease,
+        transform .2s ease;
+    }
+
+    .nav a:hover {
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
     .hero {
-      background: linear-gradient(180deg, var(--bg-panel) 0%, var(--bg-dark) 100%);
-      padding: 100px 0 80px;
-      text-align: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 85px 0 45px;
+    }
+
+    .hero-grid {
+      display: grid;
+
+      grid-template-columns:
+        1.1fr .9fr;
+
+      gap: 50px;
+
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+
+      gap: 8px;
+
+      padding:
+        8px 14px;
+
+      border-radius: 999px;
+
+      background:
+        rgba(255,138,0,.08);
+
+      border:
+        1px solid
+        rgba(255,138,0,.22);
+
+      color:
+        #ffd29a;
+
+      font-size: 13px;
+
+      margin-bottom: 20px;
+    }
+
+    .badge::before {
+      content: "";
+
+      width: 7px;
+      height: 7px;
+
+      border-radius: 50%;
+
+      background: var(--accent);
+
+      box-shadow:
+        0 0 12px var(--accent);
     }
 
     .hero h1 {
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: 800;
+      font-size:
+        clamp(42px, 6vw, 76px);
+
+      line-height: .98;
+
+      letter-spacing:
+        -0.055em;
+
       margin-bottom: 24px;
-      line-height: 1.1;
     }
 
-    .hero p {
-      font-size: clamp(1.1rem, 2vw, 1.25rem);
-      color: var(--text-muted);
-      max-width: 600px;
-      margin: 0 auto 40px;
+    .hero h1 span {
+      color: var(--accent);
+
+      text-shadow:
+        0 0 35px
+        rgba(255,138,0,.22);
     }
 
-    /* Кнопки */
-    .btn-group {
+    .hero-description {
+      color: var(--muted);
+
+      max-width: 650px;
+
+      font-size: 17px;
+    }
+
+    .hero-buttons {
       display: flex;
-      gap: 16px;
-      justify-content: center;
       flex-wrap: wrap;
+
+      gap: 12px;
+
+      margin-top: 30px;
     }
 
-    .btn {
+    .button {
+      min-height: 52px;
+
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 16px 32px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all var(--transition);
-      border: none;
+
+      padding:
+        0 20px;
+
+      border-radius:
+        15px;
+
+      border:
+        1px solid transparent;
+
+      font-weight: 750;
+
+      transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
     }
 
-    .btn-primary {
-      background-color: var(--accent);
-      color: #000;
-      box-shadow: 0 4px 24px rgba(255, 138, 0, 0.25);
+    .button:hover {
+      transform: translateY(-2px);
     }
 
-    .btn-primary:hover {
-      background-color: var(--accent-hover);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 32px rgba(255, 138, 0, 0.4);
+    .button-primary {
+      background:
+        linear-gradient(
+          145deg,
+          var(--accent),
+          var(--accent-light)
+        );
+
+      color: #191006;
+
+      box-shadow:
+        0 15px 35px
+        rgba(255,138,0,.22);
     }
 
-    .btn-secondary {
-      background-color: rgba(255, 255, 255, 0.05);
-      color: var(--text-main);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+    .button-primary:hover {
+      box-shadow:
+        0 20px 45px
+        rgba(255,138,0,.32);
     }
 
-    .btn-secondary:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-      transform: translateY(-3px);
+    .button-secondary {
+      background:
+        rgba(255,255,255,.035);
+
+      border-color:
+        var(--border);
+
+      color: white;
     }
 
-    /* Секция преимуществ */
-    .features-section {
-      padding: 100px 0;
+    .button-secondary:hover {
+      background:
+        rgba(255,255,255,.07);
     }
 
-    .features-section h2 {
-      font-size: 2.5rem;
-      text-align: center;
-      margin-bottom: 60px;
-    }
+    /* =========================
+       STATS
+    ========================= */
 
-    .features-grid {
+    .stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
+
+      grid-template-columns:
+        repeat(3,1fr);
+
+      gap: 12px;
+
+      margin-top: 30px;
     }
 
-    .feature-card {
-      background-color: var(--bg-card);
-      padding: 40px 32px;
+    .stat {
+      padding: 16px;
+
+      border:
+        1px solid var(--border);
+
+      background:
+        rgba(255,255,255,.025);
+
+      border-radius:
+        var(--radius-small);
+    }
+
+    .stat strong {
+      display: block;
+
+      margin-bottom: 3px;
+
+      font-size: 16px;
+    }
+
+    .stat span {
+      color: var(--muted);
+
+      font-size: 12px;
+    }
+
+    /* =========================
+       MOCK APP
+    ========================= */
+
+    .preview {
+      padding: 18px;
+
+      border-radius: 28px;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,.055),
+          rgba(255,255,255,.018)
+        );
+
+      border:
+        1px solid var(--border);
+
+      box-shadow:
+        var(--shadow);
+
+      position: relative;
+
+      overflow: hidden;
+    }
+
+    .preview::before {
+      content: "";
+
+      position: absolute;
+
+      width: 300px;
+      height: 300px;
+
+      right: -120px;
+      bottom: -150px;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255,138,0,.25),
+          transparent 70%
+        );
+    }
+
+    .app {
+      position: relative;
+
+      overflow: hidden;
+
       border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.03);
-      transition: all var(--transition);
+
+      background: #10131a;
+
+      border:
+        1px solid
+        rgba(255,255,255,.08);
     }
 
-    .feature-card:hover {
-      transform: translateY(-8px);
-      border-color: rgba(255, 138, 0, 0.3);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    .app-header {
+      height: 48px;
+
+      display: flex;
+      align-items: center;
+
+      gap: 7px;
+
+      padding: 0 15px;
+
+      background: #151922;
+
+      border-bottom:
+        1px solid
+        rgba(255,255,255,.06);
     }
 
-    .feature-card h3 {
-      font-size: 1.5rem;
+    .window-dot {
+      width: 9px;
+      height: 9px;
+
+      border-radius: 50%;
+
+      background: #343b49;
+    }
+
+    .app-content {
+      padding: 15px;
+
+      display: grid;
+
+      gap: 12px;
+    }
+
+    .app-panel {
+      padding: 15px;
+
+      border-radius: 17px;
+
+      background:
+        rgba(255,255,255,.035);
+
+      border:
+        1px solid
+        rgba(255,255,255,.06);
+    }
+
+    .panel-heading {
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 11px;
+
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .online {
+      color: #79e8c9;
+
+      background:
+        rgba(49,208,170,.1);
+
+      border:
+        1px solid
+        rgba(49,208,170,.15);
+
+      border-radius: 999px;
+
+      padding:
+        5px 9px;
+
+      font-size: 10px;
+    }
+
+    .room-code {
+      font-size: 22px;
+
+      font-weight: 850;
+
+      letter-spacing:
+        .13em;
+    }
+
+    .video {
+      aspect-ratio: 16/9;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 14px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #242936,
+          #10141c
+        );
+
+      border:
+        1px solid
+        rgba(255,255,255,.06);
+
+      color:
+        #ffd39b;
+
+      font-size: 13px;
+
+      letter-spacing:
+        .12em;
+    }
+
+    .chat {
+      display: grid;
+
+      gap: 8px;
+    }
+
+    .message {
+      width: fit-content;
+
+      max-width: 85%;
+
+      padding:
+        8px 11px;
+
+      border-radius: 12px;
+
+      background:
+        rgba(255,255,255,.045);
+
+      border:
+        1px solid
+        rgba(255,255,255,.06);
+
+      font-size: 12px;
+
+      color: #dfe3eb;
+    }
+
+    .message.me {
+      justify-self: end;
+
+      background:
+        rgba(255,138,0,.14);
+
+      border-color:
+        rgba(255,138,0,.16);
+    }
+
+    /* =========================
+       SECTION
+    ========================= */
+
+    section {
+      padding:
+        45px 0;
+    }
+
+    .section-heading {
+      margin-bottom: 25px;
+    }
+
+    .section-heading h2 {
+      font-size:
+        clamp(28px,4vw,42px);
+
+      letter-spacing:
+        -.04em;
+
+      margin-bottom: 8px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+
+      max-width: 650px;
+    }
+
+    /* =========================
+       FEATURES
+    ========================= */
+
+    .features {
+      display: grid;
+
+      grid-template-columns:
+        repeat(4,1fr);
+
+      gap: 16px;
+    }
+
+    .feature {
+      padding: 22px;
+
+      border-radius:
+        var(--radius);
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,.045),
+          rgba(255,255,255,.018)
+        );
+
+      border:
+        1px solid
+        var(--border);
+
+      box-shadow:
+        var(--shadow);
+
+      transition:
+        transform .2s ease,
+        border-color .2s ease;
+    }
+
+    .feature:hover {
+      transform:
+        translateY(-5px);
+
+      border-color:
+        rgba(255,138,0,.22);
+    }
+
+    .feature-icon {
+      width: 54px;
+      height: 54px;
+
+      display: grid;
+      place-items: center;
+
       margin-bottom: 16px;
-      color: #fff;
+
+      border-radius: 17px;
+
+      background:
+        rgba(255,138,0,.12);
+
+      border:
+        1px solid
+        rgba(255,138,0,.16);
+
+      font-size: 23px;
     }
 
-    .feature-card p {
-      color: var(--text-muted);
-      font-size: 1rem;
+    .feature h3 {
+      margin-bottom: 8px;
+
+      font-size: 17px;
     }
 
-    /* Секция скачивания */
-    .download-section {
-background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-card) 100%);
-      margin: 0 24px 100px;
-      padding: 80px 24px;
-      border-radius: 32px;
-      text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+    .feature p {
+      color: var(--muted);
+
+      font-size: 14px;
     }
 
-    .download-section h2 {
-      font-size: 2.5rem;
-      margin-bottom: 16px;
+    /* =========================
+       HOW IT WORKS
+    ========================= */
+
+    .steps {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3,1fr);
+
+      gap: 16px;
     }
 
-    .download-section p {
-      color: var(--text-muted);
-      max-width: 500px;
-      margin: 0 auto 40px;
-      font-size: 1.1rem;
+    .step {
+      padding: 25px;
+
+      border-radius:
+        var(--radius);
+
+      background:
+        var(--bg-card);
+
+      border:
+        1px solid var(--border);
+
+      box-shadow:
+        var(--shadow);
     }
 
-    /* Подвал */
+    .step-number {
+      width: 44px;
+      height: 44px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 14px;
+
+      margin-bottom: 15px;
+
+      color:
+        #ffd39a;
+
+      background:
+        rgba(255,138,0,.13);
+
+      font-weight: 850;
+    }
+
+    .step h3 {
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      color: var(--muted);
+
+      font-size: 14px;
+    }
+
+    /* =========================
+       DOWNLOAD
+    ========================= */
+
+    .download-box {
+      padding: 35px;
+
+      display: grid;
+
+      grid-template-columns:
+        1.1fr .9fr;
+
+      gap: 30px;
+
+      align-items: center;
+
+      border-radius:
+        28px;
+
+      background:
+        radial-gradient(
+          circle at 90% 10%,
+          rgba(255,138,0,.22),
+          transparent 32%
+        ),
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,.05),
+          rgba(255,255,255,.02)
+        );
+
+      border:
+        1px solid var(--border);
+
+      box-shadow:
+        var(--shadow);
+    }
+
+    .download-box h2 {
+      font-size:
+        clamp(28px,4vw,42px);
+
+      letter-spacing:
+        -.04em;
+
+      margin-bottom: 10px;
+    }
+
+    .download-box p {
+      color: var(--muted);
+    }
+
+    .downloads {
+      display: grid;
+
+      gap: 12px;
+    }
+
+    .downloads .button {
+      width: 100%;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
     footer {
-      background-color: var(--bg-panel);
-      padding: 40px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.95rem;
+      padding:
+        35px 0 45px;
+
+      color:
+        var(--muted-2);
     }
 
-    footer a {
-      color: var(--accent);
-      font-weight: 600;
-      transition: color var(--transition);
+    .footer {
+      padding-top: 24px;
+
+      border-top:
+        1px solid
+        var(--border);
+
+      display: flex;
+
+      justify-content: space-between;
+
+      gap: 15px;
+
+      flex-wrap: wrap;
+
+      font-size: 13px;
     }
 
-    footer a:hover {
-      color: var(--accent-hover);
+    .footer a {
+      color:
+        #ffd39a;
+    }
+
+    .footer a:hover {
+      color: white;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media(max-width:1000px) {
+
+      .hero-grid {
+        grid-template-columns:
+          1fr;
+      }
+
+      .features {
+        grid-template-columns:
+          repeat(2,1fr);
+      }
+
+      .download-box {
+        grid-template-columns:
+          1fr;
+      }
+    }
+
+    @media(max-width:700px) {
+
+      .topbar-inner {
+        min-height: auto;
+
+        padding:
+          13px 0;
+
+        flex-direction:
+          column;
+
+        align-items:
+          flex-start;
+      }
+
+      .nav {
+        width: 100%;
+
+        overflow-x: auto;
+
+        padding-bottom: 3px;
+
+        gap: 18px;
+      }
+
+      .hero {
+        padding-top:
+          50px;
+      }
+
+      .hero h1 {
+        font-size:
+          clamp(40px,12vw,62px);
+      }
+
+      .stats {
+        grid-template-columns:
+          1fr;
+      }
+
+      .features {
+        grid-template-columns:
+          1fr;
+      }
+
+      .steps {
+        grid-template-columns:
+          1fr;
+      }
+
+      .hero-buttons {
+        flex-direction:
+          column;
+      }
+
+      .hero-buttons .button {
+        width: 100%;
+      }
+
+      .download-box {
+        padding:
+          25px 20px;
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+
+      html {
+        scroll-behavior:
+          auto;
+      }
+
+      * {
+        transition:
+          none !important;
+      }
     }
   </style>
 </head>
+
 <body>
 
-  <main>
-    <!-- Главный экран -->
-    <header class="hero">
+  <!-- =========================
+       NAVBAR
+  ========================== -->
+
+  <header class="topbar">
+
+    <div class="container topbar-inner">
+
+      <a href="#top" class="brand">
+
+        <div class="brand-icon">
+          ▶
+        </div>
+
+        <div class="brand-text">
+          <strong>WatchTogether Orange</strong>
+          <span>Совместный просмотр видео</span>
+        </div>
+
+      </a>
+
+      <nav class="nav">
+
+        <a href="#features">
+          Возможности
+        </a>
+
+        <a href="#how">
+          Как работает
+        </a>
+
+        <a href="#download">
+          Скачать
+        </a>
+
+        <a href="mailto:jaorange@gmail.com">
+          Контакты
+        </a>
+
+      </nav>
+
+    </div>
+
+  </header>
+
+
+  <main id="top">
+
+    <!-- =========================
+         HERO
+    ========================== -->
+
+    <section class="hero">
+
+      <div class="container hero-grid">
+
+        <div>
+
+          <div class="badge">
+            Совместный просмотр в реальном времени
+          </div>
+
+          <h1>
+            Смотри видео
+            <span>вместе</span>
+          </h1>
+
+          <p class="hero-description">
+
+            Создавай комнату, отправляй друзьям код,
+            запускай видео с YouTube, Rutube или VK Video
+            и общайся прямо во время просмотра.
+
+          </p>
+
+          <div class="hero-buttons">
+
+            <a
+              href="#download"
+              class="button button-primary"
+            >
+              Скачать приложение
+            </a>
+
+            <a
+              href="#features"
+              class="button button-secondary"
+            >
+              Посмотреть возможности
+            </a>
+
+          </div>
+
+
+          <div class="stats">
+
+            <div class="stat">
+
+              <strong>
+                1 код
+              </strong>
+
+              <span>
+                Быстрый вход в комнату
+              </span>
+
+            </div>
+
+
+            <div class="stat">
+
+              <strong>
+                3 платформы
+              </strong>
+
+              <span>
+                YouTube · Rutube · VK
+              </span>
+
+            </div>
+
+
+            <div class="stat">
+
+              <strong>
+                Видео + чат
+              </strong>
+
+              <span>
+                Всё в одном интерфейсе
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- APP PREVIEW -->
+
+        <div class="preview">
+
+          <div class="app">
+
+            <div class="app-header">
+
+              <div class="window-dot"></div>
+              <div class="window-dot"></div>
+              <div class="window-dot"></div>
+
+            </div>
+
+
+            <div class="app-content">
+
+
+              <!-- ROOM -->
+
+              <div class="app-panel">
+
+                <div class="panel-heading">
+
+                  <span>
+                    Комната
+                  </span>
+
+                  <span class="online">
+                    ● 6 онлайн
+                  </span>
+
+                </div>
+
+                <div class="room-code">
+                  ORNG-24
+                </div>
+
+              </div>
+
+
+              <!-- VIDEO -->
+
+              <div class="app-panel">
+
+                <div class="panel-heading">
+
+                  <span>
+                    Видео
+                  </span>
+
+                  <span class="online">
+                    Синхронизация
+                  </span>
+
+                </div>
+
+                <div class="video">
+                  WATCH TOGETHER
+                </div>
+
+              </div>
+
+
+              <!-- CHAT -->
+
+              <div class="app-panel">
+
+                <div class="panel-heading">
+
+                  <span>
+                    Чат
+                  </span>
+
+                  <span class="online">
+                    Онлайн
+                  </span>
+
+                </div>
+
+                <div class="chat">
+
+                  <div class="message">
+                    Кидай ссылку, я уже в комнате.
+                  </div>
+
+                  <div class="message me">
+                    Ок, сейчас запускаю видео.
+                  </div>
+
+                  <div class="message">
+                    Погнали!
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         FEATURES
+    ========================== -->
+
+    <section id="features">
+
       <div class="container">
-        <h1>WatchTogether <span class="text-accent">Orange</span></h1>
-        <p>Совместный просмотр видео и общение в реальном времени. Создавай комнаты и делись эмоциями с друзьями!</p>
-        <div class="btn-group">
-          <a href="#download" class="btn btn-primary">Скачать сейчас</a>
-          <a href="#features" class="btn btn-secondary">Узнать больше</a>
-        </div>
-      </div>
-    </header>
 
-    <!-- Преимущества -->
-    <section class="features-section container" id="features">
-      <h2>Почему выбирают нас?</h2>
-      <div class="features-grid">
-        <div class="feature-card">
-          <h3>Легко создать комнату</h3>
-          <p>Пара кликов — и ваша комната для совместного просмотра готова. Приглашайте друзей по ссылке.</p>
+        <div class="section-heading">
+
+          <h2>
+            Возможности
+          </h2>
+
+          <p>
+            Всё необходимое для совместного просмотра
+            собрано в одном простом интерфейсе.
+          </p>
+
         </div>
-        <div class="feature-card">
-          <h3>Любые платформы</h3>
-          <p>Смотрите видео из YouTube, Rutube и VK Video без ограничений и задержек.</p>
+
+
+        <div class="features">
+
+
+          <article class="feature">
+
+            <div class="feature-icon">
+              ⚡
+            </div>
+
+            <h3>
+              Быстрый вход
+            </h3>
+
+            <p>
+              Создай комнату и поделись кодом.
+              Никаких длинных приглашений.
+            </p>
+
+          </article>
+
+
+          <article class="feature">
+
+            <div class="feature-icon">
+              🎬
+            </div>
+
+            <h3>
+              Видео-платформы
+            </h3>
+
+            <p>
+              YouTube, Rutube и VK Video
+              поддерживаются в одном приложении.
+            </p>
+
+          </article>
+
+
+          <article class="feature">
+
+            <div class="feature-icon">
+              💬
+            </div>
+
+            <h3>
+              Общий чат
+            </h3>
+
+            <p>
+              Обсуждай происходящее,
+              не закрывая окно просмотра.
+            </p>
+
+          </article>
+
+
+          <article class="feature">
+
+            <div class="feature-icon">
+              🎨
+            </div>
+
+            <h3>
+              Orange UI
+            </h3>
+
+            <p>
+              Современная тёмная тема
+              с оранжевыми акцентами.
+            </p>
+
+          </article>
+
+
         </div>
-        <div class="feature-card">
-          <h3>Живой чат</h3>
-          <p>Общайтесь в реальном времени, делитесь мнениями, реакциями и эмоциями без отрыва от видео.</p>
-        </div>
-        <div class="feature-card">
-          <h3>Кроссплатформенность</h3>
-          <p>Наше приложение идеально работает на ПК, Mac, Linux и любых мобильных устройствах.</p>
-        </div>
+
       </div>
+
     </section>
 
-    <!-- Скачивание -->
-    <section class="download-section" id="download">
-      <h2>Готовы начать?</h2>
-      <p>Наслаждайтесь совместным просмотром и общением в любой момент. Выберите вашу платформу для загрузки.</p>
-      <div class="btn-group">
-        <a href="https://example.com/download/windows" class="btn btn-primary">Скачать для Windows</a>
-        <a href="https://example.com/download/mac" class="btn btn-secondary">Скачать для Mac</a>
+
+    <!-- =========================
+         HOW IT WORKS
+    ========================== -->
+
+    <section id="how">
+
+      <div class="container">
+
+        <div class="section-heading">
+
+          <h2>
+            Как это работает
+          </h2>
+
+          <p>
+            Всего несколько действий — и можно смотреть вместе.
+          </p>
+
+        </div>
+
+
+        <div class="steps">
+
+
+          <article class="step">
+
+            <div class="step-number">
+              1
+            </div>
+
+            <h3>
+              Создай комнату
+            </h3>
+
+            <p>
+              Добавь ссылку на видео
+              и создай уникальную комнату.
+            </p>
+
+          </article>
+
+
+          <article class="step">
+
+            <div class="step-number">
+              2
+            </div>
+
+            <h3>
+              Отправь код
+            </h3>
+
+            <p>
+              Передай друзьям код комнаты,
+              чтобы они могли подключиться.
+            </p>
+
+          </article>
+
+
+          <article class="step">
+
+            <div class="step-number">
+              3
+            </div>
+
+            <h3>
+              Смотри вместе
+            </h3>
+
+            <p>
+              Запускайте видео и общайтесь
+              в общем чате.
+            </p>
+
+          </article>
+
+
+        </div>
+
       </div>
+
     </section>
+
+
+    <!-- =========================
+         DOWNLOAD
+    ========================== -->
+
+    <section id="download">
+
+      <div class="container">
+
+        <div class="download-box">
+
+          <div>
+
+            <h2>
+              Попробуй WatchTogether
+            </h2>
+
+            <p>
+              Скачай приложение и устраивай
+              совместные просмотры с друзьями.
+            </p>
+
+          </div>
+
+
+          <div class="downloads">
+
+            <a
+              href="https://example.com/download/windows"
+              target="_blank"
+              rel="noreferrer"
+              class="button button-primary"
+            >
+              🪟 Скачать для Windows
+            </a>
+
+            <a
+              href="https://example.com/download/mac"
+              target="_blank"
+              rel="noreferrer"
+              class="button button-secondary"
+            >
+               Скачать для Mac
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
   </main>
 
-  <!-- Подвал -->
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
   <footer>
-    <div class="container">
-      <p>&copy; 2024 WatchTogether Orange. Все права защищены.</p>
-      <p style="margin-top: 8px;">Контакты: <a href="mailto:jaorange@gmail.com">jaorange@gmail.com</a></p>
+
+    <div class="container footer">
+
+      <div>
+        © 2024 WatchTogether Orange
+      </div>
+
+      <div>
+        Контакты:
+        <a href="mailto:jaorange@gmail.com">
+          jaorange@gmail.com
+        </a>
+      </div>
+
     </div>
+
   </footer>
 
 </body>
